@@ -1,0 +1,21 @@
+{
+    "compilerOptions": {
+        "target": "ESNext",
+        "module": "CommonJS",
+        "strict": true,
+        "esModuleInterop": true,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        // @で./src
+        "baseUrl": "./src",
+        "outDir": "./dist"
+    },
+    // コンパイル対象
+    "include": [
+        "src/**/*.ts"
+    ],
+    // コンパイル対象外
+    "exclude": [
+        "node_modules"
+    ]
+}
