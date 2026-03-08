@@ -5,7 +5,8 @@ import { BASE_API_URL } from "../../shared/apiClient";
 import { Button } from "../../shared/ui/button";
 import { useNavigate } from "react-router-dom";
 import { NAVIGATION_LIST } from "../../shared/navigation";
-import { supabase } from "../../../../backend/node/src/config/supabase"
+import { createClient } from "@supabase/supabase-js";
+import { supabase } from "../../shared/supabaseClient";
 
 export const TodoListTemplate = () => {
     const navigate = useNavigate();
@@ -15,35 +16,31 @@ export const TodoListTemplate = () => {
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
 
-    const handleLogout = () => {
-        localStorage.removeItem('access_token');
-        localStorage.removeItem('refresh_token');
+    const handleLogout = async () => {
+        await supabase.auth.signOut();
+        setTodos([]);
         navigate(NAVIGATION_LIST.LOGIN);
     }
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const session = supabase.auth.getSession
-                    ? await supabase.auth.getSession()
-                    : null;
-                const accessToken = session?.data?.session?.access_token;
-                const res = await fetch(`${BASE_API_URL}/todos`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {})
-                    }
-                });
-                if (!res.ok) {
-                    throw new Error(`${res.status} ${res.statusText}`);
-                }
-                const data = await res.json();
-                setTodos(data);
-            } catch (error) {
-                console.error(error);
+    const fetchData = async () => {
+        // supabase-jsにトークン管理を委譲
+        const { data: { session } } = await supabase.auth.getSession();
+        const accessToken = session?.access_token;
+        const res = await fetch(`${BASE_API_URL}/todos`, {
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${accessToken}`
             }
-        };
+        });
+        if (!res.ok) {
+            alert('Failed to fetch todos');
+            return;
+        }
+        const data = await res.json();
+        setTodos(data);
+    };
+
+    useEffect(() => {
         fetchData();
     }, []);
 
