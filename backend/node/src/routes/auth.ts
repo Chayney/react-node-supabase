@@ -25,6 +25,7 @@ authRouter.post('/login', async (req: Request, res: Response) => {
         email,
         password
     });
+    console.log(data);
     if (error) {
         return res.status(400).json({ error: error.message });
     }
