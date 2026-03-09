@@ -1,0 +1,36 @@
+# ---------- Build Stage ----------
+FROM node:20-alpine AS builder
+
+WORKDIR /app
+
+# package.jsonをコピー
+COPY node/package*.json ./
+
+# 依存関係インストール（dev含む）
+RUN npm ci
+
+# ソースコードコピー
+COPY node/ .
+
+# TypeScriptビルド
+RUN npm run build
+
+
+# ---------- Production Stage ----------
+FROM node:20-alpine
+
+WORKDIR /app
+
+# 本番用依存のみ
+COPY node/package*.json ./
+RUN npm ci --omit=dev
+
+# ビルド成果物のみコピー
+COPY --from=builder /app/dist ./dist
+
+ENV NODE_ENV=production
+ENV PORT=8080
+
+EXPOSE 8080
+
+CMD ["node", "dist/index.js"]
