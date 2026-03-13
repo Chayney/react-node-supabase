@@ -15,7 +15,7 @@ steps:
         --build-arg SUPABASE_URL=${_SUPABASE_URL} \
         --build-arg SUPABASE_ANON_KEY=${_SUPABASE_ANON_KEY} \
         -t gcr.io/$PROJECT_ID/backend:$COMMIT_SHA \
-        backend/node
+        backend
 
 # frontend build
 - name: 'gcr.io/cloud-builders/docker'
