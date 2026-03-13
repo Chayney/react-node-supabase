@@ -1,20 +1,18 @@
 import { useEffect, useState } from "react"
 import type { TodoList } from "../../types/todo";
-import { Input } from "../../shared/ui/input";
 import { BASE_API_URL } from "../../shared/apiClient";
 import { Button } from "../../shared/ui/button";
 import { useNavigate } from "react-router-dom";
 import { NAVIGATION_LIST } from "../../shared/navigation";
-import { createClient } from "@supabase/supabase-js";
 import { supabase } from "../../shared/supabaseClient";
 
 export const TodoListTemplate = () => {
     const navigate = useNavigate();
-    const [todo, setTodo] = useState({ id: 0, title: '', content: '' });
+    // const [todo, setTodo] = useState({ id: 0, title: '', content: '' });
     const [todos, setTodos] = useState<TodoList[]>([]);
 
-    const [title, setTitle] = useState('');
-    const [content, setContent] = useState('');
+    // const [title, setTitle] = useState('');
+    // const [content, setContent] = useState('');
 
     const handleLogout = async () => {
         await supabase.auth.signOut();
