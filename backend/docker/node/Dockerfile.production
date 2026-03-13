@@ -3,6 +3,10 @@ FROM node:20-alpine AS builder
 
 WORKDIR /app
 
+# build-argで渡す環境変数
+ARG SUPABASE_URL
+ARG SUPABASE_ANON_KEY
+
 # package.jsonをコピー
 COPY node/package*.json ./
 
@@ -12,14 +16,21 @@ RUN npm ci
 # ソースコードコピー
 COPY node/ .
 
+# 環境変数をビルド時に設定
+ENV SUPABASE_URL=$SUPABASE_URL
+ENV SUPABASE_ANON_KEY=$SUPABASE_ANON_KEY
+
 # TypeScriptビルド
 RUN npm run build
-
 
 # ---------- Production Stage ----------
 FROM node:20-alpine
 
 WORKDIR /app
+
+# build-arg
+ARG SUPABASE_URL
+ARG SUPABASE_ANON_KEY
 
 # 本番用依存のみ
 COPY node/package*.json ./
@@ -28,8 +39,11 @@ RUN npm ci --omit=dev
 # ビルド成果物のみコピー
 COPY --from=builder /app/dist ./dist
 
+# 環境変数セット
 ENV NODE_ENV=production
 ENV PORT=8080
+ENV SUPABASE_URL=$SUPABASE_URL
+ENV SUPABASE_ANON_KEY=$SUPABASE_ANON_KEY
 
 EXPOSE 8080
 
