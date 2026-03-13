@@ -48,9 +48,7 @@ steps:
       '--image','gcr.io/$PROJECT_ID/backend:$COMMIT_SHA',
       '--region','asia-northeast1',
       '--platform','managed',
-      '--allow-unauthenticated',
-      '--member=allUsers',
-      '--role=roles/run.invoker'
+      '--allow-unauthenticated'
     ]
 
 # frontend deploy
