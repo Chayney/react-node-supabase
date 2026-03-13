@@ -1,0 +1,63 @@
+steps:
+
+# backend build
+- name: 'gcr.io/cloud-builders/docker'
+  entrypoint: 'bash'
+  args:
+    - '-c'
+    - |
+      export $(grep -v '^#' backend/.env | xargs)
+      docker build \
+        -f backend/docker/node/Dockerfile.production \
+        --build-arg SUPABASE_URL=$SUPABASE_URL \
+        --build-arg SUPABASE_ANON_KEY=$SUPABASE_ANON_KEY \
+        -t gcr.io/$PROJECT_ID/backend:$COMMIT_SHA \
+        backend/node
+
+# frontend build
+- name: 'gcr.io/cloud-builders/docker'
+  entrypoint: 'bash'
+  args:
+    - '-c'
+    - |
+      export $(grep -v '^#' frontend/.env | xargs)
+      docker build \
+        --build-arg VITE_REACT_APP_API_URL=$VITE_REACT_APP_API_URL \
+        -t gcr.io/$PROJECT_ID/frontend:$COMMIT_SHA \
+        frontend
+
+# backend push
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push','gcr.io/$PROJECT_ID/backend:$COMMIT_SHA']
+
+# frontend push
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push','gcr.io/$PROJECT_ID/frontend:$COMMIT_SHA']
+
+# backend deploy
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: gcloud
+  args:
+    [
+      'run','deploy','node-backend',
+      '--image','gcr.io/$PROJECT_ID/backend:$COMMIT_SHA',
+      '--region','asia-northeast1',
+      '--platform','managed',
+      '--allow-unauthenticated'
+    ]
+
+# frontend deploy
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: gcloud
+  args:
+    [
+      'run','deploy','react-frontend',
+      '--image','gcr.io/$PROJECT_ID/frontend:$COMMIT_SHA',
+      '--region','asia-northeast1',
+      '--platform','managed',
+      '--allow-unauthenticated'
+    ]
+
+images:
+- gcr.io/$PROJECT_ID/backend:$COMMIT_SHA
+- gcr.io/$PROJECT_ID/frontend:$COMMIT_SHA
