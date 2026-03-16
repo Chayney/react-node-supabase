@@ -2,45 +2,37 @@ options:
   logging: CLOUD_LOGGING_ONLY
 
 steps:
-
-# backend build
+# ------------------- Backend Build -------------------
 - name: 'gcr.io/cloud-builders/docker'
   entrypoint: 'bash'
   args:
     - '-c'
     - |
-      export $(grep -v '^#' backend/.env | xargs)
       docker build \
         -f backend/docker/node/Dockerfile.production \
-        --build-arg SUPABASE_URL=${_SUPABASE_URL} \
-        --build-arg SUPABASE_ANON_KEY=${_SUPABASE_ANON_KEY} \
         --build-arg NODE_ENV=${_NODE_ENV} \
-        --build-arg FRONTEND_URL=${_FRONTEND_URL} \
         -t gcr.io/$PROJECT_ID/backend:$COMMIT_SHA \
         backend
 
-# frontend build
+# ------------------- Frontend Build -------------------
 - name: 'gcr.io/cloud-builders/docker'
   entrypoint: 'bash'
   args:
     - '-c'
     - |
-      export $(grep -v '^#' frontend/.env | xargs)
       docker build \
         --build-arg VITE_REACT_APP_API_URL=${_VITE_REACT_APP_API_URL} \
         -t gcr.io/$PROJECT_ID/frontend:$COMMIT_SHA \
         frontend
 
-# backend push
+# ------------------- Push Images -------------------
 - name: 'gcr.io/cloud-builders/docker'
   args: ['push','gcr.io/$PROJECT_ID/backend:$COMMIT_SHA']
 
-# frontend push
 - name: 'gcr.io/cloud-builders/docker'
   args: ['push','gcr.io/$PROJECT_ID/frontend:$COMMIT_SHA']
 
-
-# backend deploy
+# ------------------- Backend Deploy -------------------
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
   entrypoint: gcloud
   args:
@@ -54,8 +46,18 @@ steps:
       'SUPABASE_URL=${_SUPABASE_URL},SUPABASE_ANON_KEY=${_SUPABASE_ANON_KEY},FRONTEND_URL=${_FRONTEND_URL},NODE_ENV=production'
     ]
 
+# ------------------- Backend IAM Public -------------------
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: gcloud
+  args:
+    [
+      'run','services','add-iam-policy-binding','backend-node',
+      '--member=allUsers',
+      '--role=roles/run.invoker',
+      '--region=asia-northeast1'
+    ]
 
-# frontend deploy
+# ------------------- Frontend Deploy -------------------
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
   entrypoint: gcloud
   args:
@@ -65,6 +67,17 @@ steps:
       '--region','asia-northeast1',
       '--platform','managed',
       '--allow-unauthenticated'
+    ]
+
+# ------------------- Frontend IAM Public -------------------
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: gcloud
+  args:
+    [
+      'run','services','add-iam-policy-binding','frontend',
+      '--member=allUsers',
+      '--role=roles/run.invoker',
+      '--region=asia-northeast1'
     ]
 
 images:
