@@ -28,7 +28,7 @@ export const start = async () => {
         app.use('/api', todoRouter);
 
         // nodeの起動とcors設定の確認
-        app.listen(8080, () => {
+        app.listen(PORT, () => {
             console.log(`✅ Listening on ${PORT}`);
             console.log(`✅ Listening on ${FRONTEND_URL}`);
         });
