@@ -46,17 +46,6 @@ steps:
       'SUPABASE_URL=${_SUPABASE_URL},SUPABASE_ANON_KEY=${_SUPABASE_ANON_KEY},FRONTEND_URL=${_FRONTEND_URL},NODE_ENV=production'
     ]
 
-# ------------------- Backend IAM Public -------------------
-- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-  entrypoint: gcloud
-  args:
-    [
-      'run','services','add-iam-policy-binding','backend-node',
-      '--member=allUsers',
-      '--role=roles/run.invoker',
-      '--region=asia-northeast1'
-    ]
-
 # ------------------- Frontend Deploy -------------------
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
   entrypoint: gcloud
@@ -67,17 +56,6 @@ steps:
       '--region','asia-northeast1',
       '--platform','managed',
       '--allow-unauthenticated'
-    ]
-
-# ------------------- Frontend IAM Public -------------------
-- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-  entrypoint: gcloud
-  args:
-    [
-      'run','services','add-iam-policy-binding','frontend',
-      '--member=allUsers',
-      '--role=roles/run.invoker',
-      '--region=asia-northeast1'
     ]
 
 images:
