@@ -39,6 +39,7 @@ steps:
 - name: 'gcr.io/cloud-builders/docker'
   args: ['push','gcr.io/$PROJECT_ID/frontend:$COMMIT_SHA']
 
+
 # backend deploy
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
   entrypoint: gcloud
@@ -48,8 +49,11 @@ steps:
       '--image','gcr.io/$PROJECT_ID/backend:$COMMIT_SHA',
       '--region','asia-northeast1',
       '--platform','managed',
-      '--allow-unauthenticated'
+      '--allow-unauthenticated',
+      '--set-env-vars',
+      'SUPABASE_URL=${_SUPABASE_URL},SUPABASE_ANON_KEY=${_SUPABASE_ANON_KEY},FRONTEND_URL=${_FRONTEND_URL},NODE_ENV=production'
     ]
+
 
 # frontend deploy
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
