@@ -45,7 +45,7 @@ steps:
   entrypoint: gcloud
   args:
     [
-      'run','deploy','node-backend',
+      'run','deploy','backend-node',
       '--image','gcr.io/$PROJECT_ID/backend:$COMMIT_SHA',
       '--region','asia-northeast1',
       '--platform','managed',
@@ -60,7 +60,7 @@ steps:
   entrypoint: gcloud
   args:
     [
-      'run','deploy','react-frontend',
+      'run','deploy','frontend',
       '--image','gcr.io/$PROJECT_ID/frontend:$COMMIT_SHA',
       '--region','asia-northeast1',
       '--platform','managed',
