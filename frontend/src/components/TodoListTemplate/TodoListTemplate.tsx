@@ -10,7 +10,6 @@ export const TodoListTemplate = () => {
     const navigate = useNavigate();
     // const [todo, setTodo] = useState({ id: 0, title: '', content: '' });
     const [todos, setTodos] = useState<TodoList[]>([]);
-
     // const [title, setTitle] = useState('');
     // const [content, setContent] = useState('');
 
