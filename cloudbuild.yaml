@@ -4,28 +4,25 @@ options:
 steps:
 # ------------------- Backend Build -------------------
 - name: 'gcr.io/cloud-builders/docker'
-  entrypoint: 'bash'
   args:
-    - '-c'
-    - |
-      docker build \
-        -f backend/docker/node/Dockerfile.production \
-        --build-arg NODE_ENV=${_NODE_ENV} \
-        -t gcr.io/$PROJECT_ID/backend:$COMMIT_SHA \
-        backend
+    [
+      'build',
+      '-f','backend/docker/node/Dockerfile.production',
+      '-t','gcr.io/$PROJECT_ID/backend:$COMMIT_SHA',
+      'backend'
+    ]
 
 # ------------------- Frontend Build -------------------
 - name: 'gcr.io/cloud-builders/docker'
-  entrypoint: 'bash'
   args:
-    - '-c'
-    - |
-      docker build \
-        --build-arg VITE_REACT_APP_API_URL=${_VITE_REACT_APP_API_URL} \
-        -t gcr.io/$PROJECT_ID/frontend:$COMMIT_SHA \
-        frontend
+    [
+      'build',
+      '--build-arg','VITE_REACT_APP_API_URL=${_VITE_REACT_APP_API_URL}',
+      '-t','gcr.io/$PROJECT_ID/frontend:$COMMIT_SHA',
+      'frontend'
+    ]
 
-# ------------------- Push Images -------------------
+# ------------------- Push -------------------
 - name: 'gcr.io/cloud-builders/docker'
   args: ['push','gcr.io/$PROJECT_ID/backend:$COMMIT_SHA']
 
@@ -34,7 +31,6 @@ steps:
 
 # ------------------- Backend Deploy -------------------
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-  entrypoint: gcloud
   args:
     [
       'run','deploy','backend-node',
@@ -48,7 +44,6 @@ steps:
 
 # ------------------- Frontend Deploy -------------------
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-  entrypoint: gcloud
   args:
     [
       'run','deploy','frontend',
