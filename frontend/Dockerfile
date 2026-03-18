@@ -3,18 +3,15 @@ FROM node:20-alpine AS build
 
 WORKDIR /app
 
-# build-argで渡す環境変数
+# viteはbuild時に必要
 ARG VITE_REACT_APP_API_URL
 
-# 依存関係
 COPY package*.json ./
-RUN npm install
+RUN npm ci
 
-# ソース
 COPY . .
 
-# Viteに環境変数を渡してbuild
-RUN VITE_REACT_APP_API_URL=$VITE_REACT_APP_API_URL npm run build
+RUN npm run build
 
 
 # ---------- production stage ----------
