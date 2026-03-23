@@ -65,7 +65,6 @@ export const TodoListTemplate = () => {
         fetchData();
     }, []);
 
-
     // ダミーAPI
     // const handleDeleteTodo = async (id: number) => {
     //     await fetch(`http://localhost:3001/todos/${id}`, {
