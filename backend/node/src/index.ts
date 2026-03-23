@@ -8,12 +8,12 @@ export const app = express();
 export const start = async () => {
     const PORT =
         process.env.NODE_ENV === "production"
-            ? process.env.PORT || 8080
-            : 3000;
+            ? process.env.PORT
+            : process.env.LOCAL_PORT;
     const FRONTEND_URL =
         process.env.NODE_ENV === "production"
             ? process.env.FRONTEND_URL
-            : "http://localhost:5173";
+            : process.env.LOCAL_FRONTEND_URL;
 
     try {
         // CORS設定
@@ -33,10 +33,8 @@ export const start = async () => {
             console.log(`✅ Listening on ${FRONTEND_URL}`);
         });
     } catch (error) {
-        console.error('DB connection error', error);
+        console.error('Internal Server Error', error);
     }
 };
 
-if (process.env.NODE_ENV !== 'test') {
-    start();
-}
+start();
