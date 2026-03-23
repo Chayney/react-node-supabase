@@ -11,7 +11,6 @@ import { LOCAL_API_URL } from "../../shared/apiClient"
 export const TodoEditTemplate = () => {
     const navigate = useNavigate();
     const { id } = useParams();
-    const todoId = Number(id);
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
 
