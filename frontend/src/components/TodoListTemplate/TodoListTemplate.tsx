@@ -38,7 +38,6 @@ export const TodoListTemplate = () => {
     //     setTodos(data);
     // }
 
-
     // バックエンド通信
     const fetchData = async () => {
         // supabase-jsにトークン管理を委譲
