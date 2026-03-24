@@ -5,8 +5,8 @@ import { Label } from "../../shared/ui/label"
 import { useNavigate, useParams } from "react-router-dom"
 import { NAVIGATION_LIST } from "../../shared/navigation"
 import { supabase } from "../../shared/supabaseClient"
-// import { BASE_API_URL } from "../../shared/apiClient"
-import { LOCAL_API_URL } from "../../shared/apiClient"
+import { BASE_API_URL } from "../../shared/apiClient"
+// import { LOCAL_API_URL } from "../../shared/apiClient"
 
 export const TodoEditTemplate = () => {
     const navigate = useNavigate();
@@ -36,7 +36,7 @@ export const TodoEditTemplate = () => {
         const accessToken = session?.access_token;
 
         // BASE_API_URLに変更すれば本番用バックエンドに通信する
-        const res = await fetch(`${LOCAL_API_URL}/todos/${id}`, {
+        const res = await fetch(`${BASE_API_URL}/todos/${id}`, {
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${accessToken}`
@@ -90,7 +90,7 @@ export const TodoEditTemplate = () => {
         const accessToken = session?.access_token;
 
         // BASE_API_URLに変更すれば本番用バックエンドに通信する
-        const res = await fetch(`${LOCAL_API_URL}/todos/${id}`, {
+        const res = await fetch(`${BASE_API_URL}/todos/${id}`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",

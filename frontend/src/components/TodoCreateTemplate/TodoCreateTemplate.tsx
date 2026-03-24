@@ -5,8 +5,8 @@ import { useNavigate } from "react-router-dom"
 import { Button } from "../../shared/ui/button"
 import { NAVIGATION_LIST } from "../../shared/navigation"
 import { supabase } from "../../shared/supabaseClient"
-import { LOCAL_API_URL } from "../../shared/apiClient"
-// import { BASE_API_URL } from "../../shared/apiClient"
+// import { LOCAL_API_URL } from "../../shared/apiClient"
+import { BASE_API_URL } from "../../shared/apiClient"
 
 export const TodoCreateTemplate = () => {
     const navigate = useNavigate();
@@ -49,7 +49,7 @@ export const TodoCreateTemplate = () => {
         const accessToken = session?.access_token;
 
         // BASE_API_URLに変更すれば本番用バックエンドに通信する
-        const res = await fetch(`${LOCAL_API_URL}/todos`, {
+        const res = await fetch(`${BASE_API_URL}/todos`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

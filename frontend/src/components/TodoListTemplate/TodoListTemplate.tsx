@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import type { TodoList } from "../../types/todo";
-import { LOCAL_API_URL } from "../../shared/apiClient";
-// import { BASE_API_URL } from "../../shared/apiClient"
+// import { LOCAL_API_URL } from "../../shared/apiClient";
+import { BASE_API_URL } from "../../shared/apiClient"
 import { Button } from "../../shared/ui/button";
 import { useNavigate } from "react-router-dom";
 import { NAVIGATION_LIST, NAVIGATION_PATH } from "../../shared/navigation";
@@ -46,7 +46,7 @@ export const TodoListTemplate = () => {
         const accessToken = session?.access_token;
 
         // BASE_API_URLに変更すれば本番用バックエンドに通信する
-        const res = await fetch(`${LOCAL_API_URL}/todos`, {
+        const res = await fetch(`${BASE_API_URL}/todos`, {
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${accessToken}`
@@ -80,7 +80,7 @@ export const TodoListTemplate = () => {
         const accessToken = session?.access_token;
 
         // BASE_API_URLに変更すれば本番用バックエンドに通信する
-        const res = await fetch(`${LOCAL_API_URL}/todos/${id}`, {
+        const res = await fetch(`${BASE_API_URL}/todos/${id}`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
