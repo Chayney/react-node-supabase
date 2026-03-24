@@ -56,7 +56,6 @@ export const TodoEditTemplate = () => {
         fetchData()
     }, [id]);
 
-
     // ダミーAPI
     // const handleEditTodo = async (event: React.SyntheticEvent<HTMLFormElement>) => {
     //     event.preventDefault();
