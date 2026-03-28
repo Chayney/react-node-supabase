@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react"
 import type { TodoList } from "../../types/todo";
-// import { LOCAL_API_URL } from "../../shared/apiClient";
 import { BASE_API_URL } from "../../shared/apiClient"
 import { Button } from "../../shared/ui/button";
 import { useNavigate } from "react-router-dom";
@@ -44,7 +43,7 @@ export const TodoListTemplate = () => {
         // supabase-jsにトークン管理を委譲
         const { data: { session } } = await supabase.auth.getSession();
         const accessToken = session?.access_token;
-
+        console.log(BASE_API_URL)
         // BASE_API_URLに変更すれば本番用バックエンドに通信する
         const res = await fetch(`${BASE_API_URL}/todos`, {
             headers: {
